@@ -1,0 +1,91 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CGPA Calculator</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+          <ul>
+            <li><a href="/">Hello...</a></li>
+            <!-- Add more navigation links as needed -->
+          </ul>
+          <div id="greeting">Good Morning</div>
+        </nav>
+      </header>
+
+
+  <div class="container">
+    <h1>CGPA Calculator</h1>
+    <form action="/calculate" method="POST" id="cgpa-form">
+      <div id="courses">
+        <div class="course">
+          <label for="subject0">Subject:</label>
+          <input type="text" name="subjects[0]" required>
+          <label for="credit0">Credits:</label>
+          <input type="text" name="credits[0]" required>
+          <label for="grade0">Grade:</label>
+          <input type="text" name="grades[0]" required>
+          <button type="button" class="remove-course">Remove</button>
+        </div>
+      </div>
+       <!-- Input for total credits -->
+       <label for="totalCredits">Total Credits:</label>
+       <input type="text" name="totalCredits" required>
+       <button type="button" id="add-course">Add Course</button>
+       <button type="submit">Calculate CGPA</button>
+      
+    </form>
+  </div>
+  <script>
+    let courseCount = 1;
+
+    document.getElementById('add-course').addEventListener('click', () => {
+      const coursesDiv = document.getElementById('courses');
+      const newCourseDiv = document.createElement('div');
+      newCourseDiv.className = 'course';
+      newCourseDiv.innerHTML = `
+        <label for="subject${courseCount}">Subject:</label>
+        <input type="text" name="subjects[${courseCount}]" required>
+        <label for="credit${courseCount}">Credits:</label>
+        <input type="text" name="credits[${courseCount}]" required>
+        <label for="grade${courseCount}">Grade:</label>
+        <input type="text" name="grades[${courseCount}]" required>
+        <button type="button" class="remove-course">Remove</button>
+      `;
+      coursesDiv.appendChild(newCourseDiv);
+      courseCount++;
+
+      // Add event listener to the new "Remove" button
+      newCourseDiv.querySelector('.remove-course').addEventListener('click', () => {
+        coursesDiv.removeChild(newCourseDiv);
+      });
+    });
+  </script>
+
+
+<footer>
+    &copy; 2023 Eseha Jospeh Ilerioluwa All Rights Reserved.
+  </footer>
+  <script>
+    // JavaScript for changing the greeting based on the user's local time
+    const greetingDiv = document.getElementById('greeting');
+    const hour = new Date().getHours();
+    let greeting = "";
+
+    if (hour >= 5 && hour < 12) {
+      greeting = 'Good Morning';
+    } else if (hour >= 12 && hour < 18) {
+      greeting = 'Good Afternoon';
+    } else {
+      greeting = 'Good Evening';
+    }
+
+    greetingDiv.textContent = greeting;
+  </script>
+</body>
+</html>
+
