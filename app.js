@@ -9,16 +9,6 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Define the grade-point values for each grade (capital letters)
-const gradePoints = {
-  'A': 10,
-  'B': 8,
-  'C': 6,
-  'D': 4,
-  'E': 2,
-  'F': 0,
-};
-
 app.get('/', (req, res) => {
   res.render('index');
 });
@@ -26,30 +16,35 @@ app.get('/', (req, res) => {
 app.post('/calculate', (req, res) => {
   const { subjects, credits, grades, totalCredits } = req.body;
 
-  // Check if inputs are valid
-  if (!Array.isArray(subjects) || !Array.isArray(credits) || !Array.isArray(grades) ||
-      subjects.length !== credits.length || subjects.length !== grades.length) {
-    res.render('error', { message: 'Invalid input format. Please check your subjects, grades, and credits.' });
+  const gradeValues = {
+    'A': 5,
+    'B': 4,
+    'C': 3,
+    'D': 2,
+    'E': 1,
+    'F': 0,
+  };
+
+  const isValidInput = subjects && credits && grades &&
+    subjects.length === credits.length && subjects.length === grades.length;
+
+  if (!isValidInput) {
+    res.render('error', { message: 'Invalid input. Please check your grades and credits.' });
     return;
   }
 
+  let totalPoints = 0;
   let totalCourseCredits = 0;
-  let totalGradePoints = 0;
 
   for (let i = 0; i < subjects.length; i++) {
     const credit = parseFloat(credits[i]);
-    let grade = grades[i]; // Keep the original case of the input grade
+    const grade = grades[i].toUpperCase();
 
-    // Convert the grade to uppercase (consistency for matching)
-    grade = grade.toUpperCase();
-
-    if (!isNaN(credit) && credit > 0 && gradePoints.hasOwnProperty(grade)) {
-      totalGradePoints += gradePoints[grade]; // Sum the grade points
+    if (!isNaN(credit) && gradeValues.hasOwnProperty(grade)) {
+      totalPoints += credit * gradeValues[grade];
       totalCourseCredits += credit;
     }
   }
-
-  
 
   if (totalCourseCredits <= 0) {
     res.render('error', { message: 'Total course credits must be greater than zero.' });
@@ -61,7 +56,7 @@ app.post('/calculate', (req, res) => {
     return;
   }
 
-  const cgpa = totalGradePoints / totalCourseCredits;
+  const cgpa = totalPoints / totalCourseCredits;
 
   res.render('result', { cgpa: cgpa.toFixed(2) });
 });
@@ -69,4 +64,3 @@ app.post('/calculate', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
