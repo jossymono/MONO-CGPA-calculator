@@ -6,17 +6,15 @@
   <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 <body>
-
-    <header>
-        <nav>
-          <ul>
-            <li><a href="/">Hello...</a></li>
-            <!-- Add more navigation links as needed -->
-          </ul>
-          <div id="greeting">Good Morning</div>
-        </nav>
-      </header>
-
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Hello...</a></li>
+        <!-- Add more navigation links as needed -->
+      </ul>
+      <div id="greeting">Good Morning</div>
+    </nav>
+  </header>
 
   <div class="container">
     <h1>CGPA Calculator</h1>
@@ -26,20 +24,39 @@
           <label for="subject0">Subject:</label>
           <input type="text" name="subjects[0]" required>
           <label for="credit0">Credits:</label>
-          <input type="text" name="credits[0]" required>
+          <select name="credits[0]" required>
+            <option value="0">Select-Credit</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
           <label for="grade0">Grade:</label>
-          <input type="text" name="grades[0]" required>
+          <select name="grades[0]" required>
+            <option value="0">Select-Grade</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+          </select>
           <button type="button" class="remove-course">Remove</button>
         </div>
       </div>
-       <!-- Input for total credits -->
-       <label for="totalCredits">Total Credits:</label>
-       <input type="text" name="totalCredits" required>
-       <button type="button" id="add-course">Add Course</button>
-       <button type="submit">Calculate CGPA</button>
-      
+      <!-- Input for total credits -->
+      <label for="totalCredits">Total Credits:</label>
+      <input type="text" name="totalCredits" id="totalCredits" required>
+      <button type="button" id="add-course">Add Course</button>
+      <button type="submit">Calculate CGPA</button>
     </form>
   </div>
+
   <script>
     let courseCount = 1;
 
@@ -51,9 +68,28 @@
         <label for="subject${courseCount}">Subject:</label>
         <input type="text" name="subjects[${courseCount}]" required>
         <label for="credit${courseCount}">Credits:</label>
-        <input type="text" name="credits[${courseCount}]" required>
+        <select name="credits[${courseCount}]" required>
+          <option value="0">Select-Credit</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
         <label for="grade${courseCount}">Grade:</label>
-        <input type="text" name="grades[${courseCount}]" required>
+        <select name="grades[${courseCount}]" required>
+          <option value="0">Select-Grade</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+        </select>
         <button type="button" class="remove-course">Remove</button>
       `;
       coursesDiv.appendChild(newCourseDiv);
@@ -64,10 +100,36 @@
         coursesDiv.removeChild(newCourseDiv);
       });
     });
+
+    // JavaScript validation for credits and grades
+    const cgpaForm = document.getElementById('cgpa-form');
+    cgpaForm.addEventListener('submit', (e) => {
+      const creditsInputs = document.querySelectorAll('select[name^="credits"]');
+      const gradesInputs = document.querySelectorAll('select[name^="grades"]');
+
+      for (let i = 0; i < creditsInputs.length; i++) {
+        const creditInput = creditsInputs[i];
+        const gradeInput = gradesInputs[i];
+
+        // Validate credits (numeric and greater than zero)
+        if (isNaN(creditInput.value) || parseFloat(creditInput.value) <= 0) {
+          e.preventDefault();
+          alert('Credits must be a positive number.');
+          return;
+        }
+
+        // Validate grades (only A, B, C, D, E, F)
+        const validGrades = ['A', 'B', 'C', 'D', 'E', 'F'];
+        if (!validGrades.includes(gradeInput.value.toUpperCase())) {
+          e.preventDefault();
+          alert('Grades input should be A, B, C, D, E, or F (case-insensitive).');
+          return;
+        }
+      }
+    });
   </script>
 
-
-<footer>
+  <footer>
     &copy; 2023 Eseha Jospeh Ilerioluwa All Rights Reserved.
   </footer>
   <script>
